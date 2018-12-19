@@ -32,6 +32,9 @@ function finish() {
     // presses done button.
 }
 
+
+//https://byui.instructure.com/courses/80/assignments/941981
+
 module.exports = async (courseName, assignmentName) => {
     await selectCourse(courseName);
     await selectAssignment(assignmentName);

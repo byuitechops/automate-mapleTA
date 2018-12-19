@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/byuitechops/automate-mapleTA#readme",
   "dependencies": {
+    "canvas-api-wrapper": "^3.3.5",
     "puppeteer": "^1.11.0"
   }
 }

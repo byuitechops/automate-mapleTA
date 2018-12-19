@@ -1,3 +1,4 @@
+const puppeteer = require('puppeteer');
 /**
  * Login
  * 1) Checks for default paths for username/password
