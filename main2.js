@@ -25,6 +25,9 @@ const automation = require('./automation');
         console.log('Created assignment', JSON.stringify(assignment, null, 4));
 
         //call the automation
+        await automation.goToAssignment(assignment.html_url, page);
+
+        console.log(assignment.html_url);
         
 
     } catch (error) {
