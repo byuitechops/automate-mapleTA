@@ -1,6 +1,6 @@
 const canvas = require('./login2');
 const makeAssignment = require('./makeLTIAssignment');
-const automation = require('./automation');
+const goToAssignment = require('./automation');
 (async function () {
     try {
 
@@ -25,7 +25,7 @@ const automation = require('./automation');
         console.log('Created assignment', JSON.stringify(assignment, null, 4));
 
         //call the automation
-        await automation.goToAssignment(assignment.html_url, page);
+        await goToAssignment(assignment.html_url, page);
 
         console.log(assignment.html_url);
         
