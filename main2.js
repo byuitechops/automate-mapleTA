@@ -27,6 +27,19 @@ const assignmentName = 'Maple Graded Questions';
         //call the automation
         await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
 
+        // make nested loop
+        // reporting
+        // accept inputs
+        // course list
+        // mapleta assign list
+        // username password - login
+        // conditionally find a canvas assignment instead of making one
+        // do we need to clone the mapleta course
+        // setup a homepage link?
+        // do we need to impersonate?
+        // Blueprint?
+        // 
+
     } catch (error) {
         console.error(error);
     }
