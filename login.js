@@ -1,55 +1,44 @@
 const puppeteer = require('puppeteer');
-/**
- * Login
- * 1) Checks for default paths for username/password
- * 2) If there aren't any, prompt user for username/password
- * 3) Instantiates puppeteer and tries logging in
- * 4) Log results
- **/
+const userNameInput = '#pseudonym_session_unique_id';
+const passWordInput = '#pseudonym_session_password';
+const button = 'button[type=submit]'
+var browser;
 
-// require inquire package
+async function login(inputs) {
+    browser = await puppeteer.launch({
+        headless: false,
+        defaultViewport: {
+            width: 1900,
+            height: 1080
+        },
+        args: ['--start-maximized', '--debug-devtools'],
+        devtools: true
+    });
 
-/**
- * checkForDefaults
- * 
- * Check to see if there are default variables
- * If so, set the username/password
- * 
- */
-function checkForDefaults() {
+    var pages = await browser.pages();
+    var page = pages[0];
+    
+
+
+    await page.goto('https://byui.instructure.com/login/canvas', {
+        waitUntil: ['load', 'domcontentloaded']
+    });
+    await page.waitForSelector(userNameInput)
+    await page.type(userNameInput, inputs.userName);
+    await page.type(passWordInput, inputs.passWord);
+    await Promise.all([page.waitForSelector('.ic-Dashboard-header__title'), page.click(button)]);
+    return page;
+}
+
+async function logout() {
+
+
 
 }
 
-/**
- * getCredentials
- * 
- * Prompts user for username
- * Prompts user for password
- * Stores both values in an object and passes it on
- */
-function getCredentials() {
-    // Get username
-    let username;
-    // Get password
-    let password;
-    return { username, password };
-}
 
-/**
- * Login
- * 
- * Creates instance of puppeteer
- * Uses credentials to try logging in
- * Reports back whether or not it worked
- */
-function login(credentials) {
-    // Start puppeteer
-    // Try logging in with credentials
-    // Return result / if fails, prompt for credentials again
-}
-
-module.exports = async () => {
-    await checkForDefaults();
-    let credentials = await getCredentials();
-    await login(credentials);
+module.exports = {
+    
+    login: login,
+    logout: logout
 }

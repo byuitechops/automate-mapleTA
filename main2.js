@@ -1,6 +1,8 @@
-const canvas = require('./login2');
-const makeAssignment = require('./makeLTIAssignment');
-const goToAssignment = require('./automation');
+const browserCanvas = require('./login');
+const makeCanvasAssignment = require('./makeLTIAssignment');
+const setupMapleTAAssignment = require('./setupMapleTAAssignment');
+const courseName = 'Joshua McKinney Sandbox - Zach Heiner';
+const assignmentName = 'Maple Graded Questions';
 (async function () {
     try {
 
@@ -15,20 +17,15 @@ const goToAssignment = require('./automation');
             },
             assignment;
 
-        var page = await canvas.login({
+        var page = await browserCanvas.login({
             userName: process.env.CANVAS_USERNAME || "asdkfj",
             passWord: process.env.CANVAS_PASSWORD || "1234"
         });
 
-        assignment = await makeAssignment('80', assignmentData, ltiTool, false);
-
-        console.log('Created assignment', JSON.stringify(assignment, null, 4));
+        assignment = await makeCanvasAssignment('80', assignmentData, ltiTool, false);
 
         //call the automation
-        await goToAssignment(assignment.html_url, page);
-
-        console.log(assignment.html_url);
-        
+        await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
 
     } catch (error) {
         console.error(error);
