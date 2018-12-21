@@ -1,22 +1,70 @@
-/**
- * Main File
- * Runs the input
- * Parses CSV into an array of information.
- * Runs through array and runs the course-loop
- * which will run the assignment-loop
- * which will run puppeteer
- */
+const browserCanvas = require('./login');
+const makeCanvasAssignment = require('./makeLTIAssignment');
+const setupMapleTAAssignment = require('./setupMapleTAAssignment');
+const courseName = 'Joshua McKinney Sandbox - Zach Heiner';
+const assignmentName = 'Maple Graded Questions';
+const inquirer = require('inquirer');
 
-const login = require('./login.js');
-const input = require('./input.js');
-const courseLoop = require('./course-loop.js');
+(async function () {
+    try {
+        
+        var assignmentData = {
+                name: "The Best Name Ever",
+                description: "This is the description."
+            },
+            ltiTool = {
+                launchURL: "https://byui-canvas.mapleta.com:443/byui-canvas/lti/",
+                toolId: "127"
+            },
+            assignment;
 
-// async waterfall this?
-// Check for defaults or prompt for credentials
-login();
+        //prompt the user for username and password
+        var answers  = await inquirer
+                .prompt([
+                    {
+                        type: 'input',
+                        name: 'username',
+                        message: "Enter your username"
+                    },
+                    {
+                        type: 'password',
+                        name: 'password',
+                        message: 'Enter your password',
+                        mask: '*'
+                    }
+    
+                ])
+                .then(answers => {
+                    
+                    return answers;
+    
+                });
 
-// Assuming they logged in correctly. . .
-let data = input();
+        var page = await browserCanvas.login({
+            userName: answers.username,
+            passWord: answers.password
+        });
 
-// Pass the data (assignmentList, courseList, and willCreateHomeLink) into the courseLoop
-courseLoop(data);
+        assignment = await makeCanvasAssignment('80', assignmentData, ltiTool, false);
+
+        //call the automation
+        await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
+
+        // make nested loop
+        // reporting
+        // accept inputs
+        // course list
+        // mapleta assign list
+        // username password - login
+        // conditionally find a canvas assignment instead of making one
+        // do we need to clone the mapleta course
+        // setup a homepage link?
+        // do we need to impersonate?
+        // Blueprint?
+        // 
+        await browserCanvas.logout();
+    } catch (error) {
+        console.error(error);
+    }
+
+})();
