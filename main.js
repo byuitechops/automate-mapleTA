@@ -1,9 +1,10 @@
 const browserCanvas = require('./login');
 const makeCanvasAssignment = require('./makeLTIAssignment');
+const input = require('./input.js');
 const setupMapleTAAssignment = require('./setupMapleTAAssignment');
 const courseName = 'Joshua McKinney Sandbox - Zach Heiner';
 const assignmentName = 'Maple Graded Questions';
-const inquirer = require('inquirer');
+
 
 (async function () {
     try {
@@ -19,26 +20,7 @@ const inquirer = require('inquirer');
             assignment;
 
         //prompt the user for username and password
-        var answers  = await inquirer
-                .prompt([
-                    {
-                        type: 'input',
-                        name: 'username',
-                        message: "Enter your username"
-                    },
-                    {
-                        type: 'password',
-                        name: 'password',
-                        message: 'Enter your password',
-                        mask: '*'
-                    }
-    
-                ])
-                .then(answers => {
-                    
-                    return answers;
-    
-                });
+        var answers  = await input.getInput();
 
         var page = await browserCanvas.login({
             userName: answers.username,

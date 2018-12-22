@@ -1,8 +1,7 @@
 const puppeteer = require('puppeteer');
 const userNameInput = '#pseudonym_session_unique_id';
 const passWordInput = '#pseudonym_session_password';
-const button = 'button[type=submit]'
-const logoutButton = '._16dxlnN _2A82x0p _1EYI5q2 _3gZINZD _3v81sUu _3PmbyiE'
+const button = 'button[type=submit]';
 var browser;
 
 async function login(inputs) {

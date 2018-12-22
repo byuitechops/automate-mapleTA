@@ -1,54 +1,54 @@
-/**
- * Input
- * 1) Asks for file name of CSV containing course IDs
- * 2) Asks for file name of CSV containing assignment information which
- * will include Assignment name, Module ID/Name, and potentially their order
- **/
+const inquirer = require('inquirer');
+const fs = require('fs');
+const d3 = require('d3-dsv');
 
-// require inquire package
+async function getInput() {
+        return inquirer
+            .prompt([{
+                    type: 'input',
+                    name: 'username',
+                    message: "Enter your username"
+                },
+                {
+                    type: 'password',
+                    name: 'password',
+                    message: 'Enter your password',
+                    mask: '*'
+                },
+                {
+                    type: 'input',
+                    name: 'courseCSV',
+                    message: 'Enter the course CSV filename'
+                },
+                {
+                    type: 'input',
+                    name: 'assignmentCSV',
+                    message: 'Enter the assignment CSV filename'
+                }
 
-/**
- * getCourseCSV
- * 
- * Prompt user for filename
- * Check if it's a valid file
- * parse and create array of course OUs
- */
-function getCourseCSV() {
+            ])
+            .then(answers => {
+
+                return answers;
+
+            });
+}
+
+async function getCourseCSV(courseCsvFile){
+
+    var csvCourseData = d3.csvParse(fs.readFileSync(courseCsvFile, 'utf8'));
+    return csvCourseData;
+}
+async function getAssignmentCSV(AssignmentCsvFile){
+
+    var csvAssignmentData = d3.csvParse(fs.readFileSync(AssignmentCsvFile, 'utf8'));
+    return csvAssignmentData;
 
 }
 
-/**
- * getAssignmentsCSV
- * 
- * Prompt user for filename
- * Check to see if it's a valid file
- * parse and create array of assignments
- */
-function getAssignmentCSV() {
-
-}
-
-/**
- * willCreateHomeLink
- * 
- * Prompts the user if they'd like to setup 
- * a link to the MapleTA home within their canvas course
- * 
- * Defaults no.
- */
-function willCreateHomeLink() {
-    // prompts y or n
-    // Defaults n
-}
-
-module.exports = async () => {
-    let courseList = await getCourseCSV();
-    let assignmentList = await getAssignmentCSV();
-    let willCreateHomeLink = await willCreateHomeLink();
-    return {
-        courseList,
-        assignmentList,
-        willCreateHomeLink
-    }
+module.exports = {
+    
+    getInput: getInput,
+    getCourseCSV: getCourseCSV,
+    getAssignmentCSV: getAssignmentCSV
 }
