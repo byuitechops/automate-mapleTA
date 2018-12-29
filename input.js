@@ -41,7 +41,7 @@ async function getCourseCSV(courseCsvFile){
 }
 async function getAssignmentCSV(AssignmentCsvFile){
 
-    var csvAssignmentData = d3.csvParse(fs.readFileSync(AssignmentCsvFile, 'utf8'));
+    var csvAssignmentData = d3.csvParse(fs.readFileSync('ME 172 Maple TA quiz names.csv', 'utf8'));
     return csvAssignmentData;
 
 }
