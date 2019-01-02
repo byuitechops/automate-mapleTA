@@ -41,7 +41,7 @@ const assignmentLoop = require('./assignment-loop');
 
 
         //call the automation
-        await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
+        //await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
 
         // make nested loop
         // reporting

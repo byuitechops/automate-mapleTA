@@ -46,20 +46,56 @@
 //         await createModuleItem(moduleName);
 //     });
 // }
-
+const setupMapleTAAssignment = require('./setupMapleTAAssignment');
 
 module.exports = async (courseId, assignmentList, assignmentCSV) => {
    
-    assignmentList.forEach( assignment => {
-        let isAssignThere = assignmentCSV.quizNames.includes(assignment.name)
-        //console.log(assignment.name);
+// got the nested loop running with forEach loops but according to Seth it wont run async that way, decided to switch to a reduce
+   var assignmentsToRun =  assignmentList.reduce((acc, assignment) => {
+        
+        //nested loops to sort which assignments are there and which are not
+        assignmentCSV.forEach(mapleta => {
 
-        if(isAssignThere){
-            console.log('Made it');
-            console.log(assignment.name);
+            //regex and to Upper to do comparisons. Also for whatever reason a mystery character was showing up from the csv
+            var capitalAssignment = assignment.name.replace(/&/gi, 'and').replace(/\W/gi, '').toUpperCase();
+            var capitalMapleta = mapleta['﻿QUIZ'].replace(/&/gi, 'and').replace(/\W/gi, '').toUpperCase();
+            
+            //if they match do this
+            if (capitalAssignment === capitalMapleta){
+                console.log(assignment.name, mapleta['﻿QUIZ']);
+                
+                // theorectically outside of the loops after the fact, this statement should work with very little modification
+                //await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
+            }
+            
+        })
 
-        }
+    }, [])
+    
+    
+    
+    
+    
+    // {
+    //     console.log(assignment['﻿QUIZ']);
+    // })
+    
+    
+    
+    
+    
+    // assignmentList.forEach( assignment => {
+        
+    //     //console.log(assignment.name);
+    //     console.log(assignmentCSV[0]);
+    //     var isAssignThere = assignmentCSV;
+
+    //     if(isAssignThere){
+    //         console.log('Made it');
+    //         console.log(assignment.name);
+
+    //     }
 
         
-    });
+    // });
 }

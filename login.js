@@ -24,8 +24,11 @@ async function login(inputs) {
         waitUntil: ['load', 'domcontentloaded']
     });
     await page.waitForSelector(userNameInput)
-    await page.type(userNameInput, inputs.userName);
-    await page.type(passWordInput, inputs.passWord);
+    //await page.type(userNameInput, inputs.userName);
+    //await page.type(passWordInput, inputs.passWord);
+    await page.type(userNameInput, process.env.USERNAME);
+    await page.type(passWordInput, process.env.PASSWORD);
+
     await Promise.all([page.waitForSelector('.ic-Dashboard-header__title'), page.click(button)]);
     return page;
 }
