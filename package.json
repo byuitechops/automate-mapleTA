@@ -18,6 +18,9 @@
   "homepage": "https://github.com/byuitechops/automate-mapleTA#readme",
   "dependencies": {
     "canvas-api-wrapper": "^3.3.5",
-    "puppeteer": "^1.11.0"
+    "d3-dsv": "^1.0.10",
+    "inquirer": "^6.2.1",
+    "puppeteer": "^1.11.0",
+    "strip-bom": "^3.0.0"
   }
 }

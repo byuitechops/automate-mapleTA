@@ -2,28 +2,33 @@ const inquirer = require('inquirer');
 const fs = require('fs');
 const d3 = require('d3-dsv');
 
+
 async function getInput() {
         return inquirer
             .prompt([{
                     type: 'input',
                     name: 'username',
-                    message: "Enter your username"
+                    message: "Enter your username",
+                    default:"sdfsdfsdf"
                 },
                 {
                     type: 'password',
                     name: 'password',
                     message: 'Enter your password',
-                    mask: '*'
+                    mask: '*',
+                    default:"sdfsdfsdf"
                 },
                 {
                     type: 'input',
                     name: 'courseCSV',
-                    message: 'Enter the course CSV filename'
+                    message: 'Enter the course CSV filename',
+                    default:"courseList.csv"
                 },
                 {
                     type: 'input',
                     name: 'assignmentCSV',
-                    message: 'Enter the assignment CSV filename'
+                    message: 'Enter the assignment CSV filename',
+                    default:"ME 172 Maple TA quiz names.csv"
                 }
 
             ])
@@ -34,14 +39,10 @@ async function getInput() {
             });
 }
 
-async function getCourseCSV(courseCsvFile){
 
-    var csvCourseData = d3.csvParse(fs.readFileSync(courseCsvFile, 'utf8'));
-    return csvCourseData;
-}
 async function getAssignmentCSV(AssignmentCsvFile){
 
-    var csvAssignmentData = d3.csvParse(fs.readFileSync('ME 172 Maple TA quiz names.csv', 'utf8'));
+    var csvAssignmentData = d3.csvParse(stripBOM(fs.readFileSync('ME 172 Maple TA quiz names.csv', 'utf8')));
     return csvAssignmentData;
 
 }
@@ -49,6 +50,6 @@ async function getAssignmentCSV(AssignmentCsvFile){
 module.exports = {
     
     getInput: getInput,
-    getCourseCSV: getCourseCSV,
+    // getCourseCSV: getCourseCSV,
     getAssignmentCSV: getAssignmentCSV
 }
