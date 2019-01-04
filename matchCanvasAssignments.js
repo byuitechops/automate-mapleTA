@@ -2,11 +2,7 @@ const normalizeName = require('./normalizeAssignmentName');
 
 module.exports = (assignmentListCSV, assignmentListCanvas) => {
 
-    var canvasAssignmentObjs, combinedList,
-        matchLists = {
-            matches: [],
-            noMatches: []
-        };
+    var canvasAssignmentObjs, combinedList;
 
     //Keep the Keys we want
     function makeCanvasAssignmentObjs(canvasAssignment) {
@@ -18,11 +14,12 @@ module.exports = (assignmentListCSV, assignmentListCanvas) => {
         };
     }
 
-    function makeMatches(matchLists, csvAssignment) {
+    function makeMatches(csvAssignment) {
         //normalize the csv name for comparison
         csvAssignment.normalizedNameCanvas = normalizeName(csvAssignment.nameCanvas)
         var match = {
-            csv: csvAssignment
+            csv: csvAssignment,
+            hasCanvasAssignment: false
         };
 
         //search the canvas assignments to find a match  
@@ -32,26 +29,24 @@ module.exports = (assignmentListCSV, assignmentListCanvas) => {
         if (matches.length === 0) {
             //none
             match.message = `No match in Canvas`
-            matchLists.noMatches.push(match);
         } else if (matches.length > 1) {
             //too many
             match.message = `Found ${matches.length} matches in Canvas`
             //save the matches for debugging
             match.tooManyMatches = matches;
-            matchLists.noMatches.push(match);
         } else {
             //just right
+            match.hasCanvasAssignment = true;
             match.canvas = matches[0];
-            matchLists.matches.push(match)
         }
 
-        return matchLists;
+        return match;
     }
     //get just the parts of the canvas assignments we want to keep
     canvasAssignmentObjs = assignmentListCanvas.map(makeCanvasAssignmentObjs);
 
     //starting with the CSV list find the Canvas assignment matches 
-    combinedList = assignmentListCSV.reduce(makeMatches, matchLists);
+    matches = assignmentListCSV.map(makeMatches);
 
-    return combinedList;
+    return matches;
 }

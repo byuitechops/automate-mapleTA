@@ -1,6 +1,6 @@
-const browserCanvas = require('./login');
+const browserCanvas = require('./puppeteerLogin');
 const makeCanvasAssignment = require('./makeLTIAssignment');
-const input = require('./input.js');
+const input = require('./getInput.js');
 const setupMapleTAAssignment = require('./setupMapleTAAssignment');
 const assignmentLoop = require('./assignment-loop');
 
