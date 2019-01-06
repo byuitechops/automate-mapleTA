@@ -38,6 +38,9 @@ async function main() {
         //Course Loop
         for (let i = 0; i < courseCSV.length; i++) {
             const course = courseCSV[i];
+            console.log('====================================================');
+            console.log(`STARTING ${course.name}|${course.courseIdCanvas}|${i}|${((i+1)/courseCSV.length *100).toFixed(2)}%`);
+            console.log('====================================================');
 
             //get canvas assignments
             let assignmentListCanvas = await getAssignmentListFromCanvas(course.courseIdCanvas);
