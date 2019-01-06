@@ -3,12 +3,14 @@ const setupMapleTAAssignment = require('./setupMapleTAAssignment');
 const browserCanvas = require('./puppeteerLogin');
 const getAssignmentListFromCanvas = require('./getAssignmentListFromCanvas');
 const matchCanvasAssignments = require('./matchCanvasAssignments');
+const makeReport = require('./makeReport');
 
 
-async function getCSV(courseCsvFile) {
+function getCSV(courseCsvFile) {
     const stripBOM = require('strip-bom');
     const dsv = require('d3-dsv');
     const path = require('path');
+    const fs =  require('fs');
     //resolve the path the user puts in
     courseCsvFile = path.resolve(courseCsvFile);
     //read it in and remove the potential BOM and then parse with DSV 
@@ -38,7 +40,7 @@ async function main() {
             const course = courseCSV[i];
 
             //get canvas assignments
-            let assignmentListCanvas = await getAssignmentListFromCanvas(course.id);
+            let assignmentListCanvas = await getAssignmentListFromCanvas(course.courseIdCanvas);
 
             //match up the assignmentListCanvas with assignmentListCSV
             let assignmentMatches = matchCanvasAssignments(assignmentListCSV, assignmentListCanvas)
@@ -54,7 +56,7 @@ async function main() {
                 if(assignment.hasCanvasAssignment){
                     //run puppeteer 
                     try{
-                        await setupMapleTAAssignment(assignment.canvas.url, assignment.csv.courseNameMapleTA, assignment.csv.nameMapleTA, page);
+                        await setupMapleTAAssignment(assignment.canvas.url, course.courseNameMapleTA, assignment.csv.nameMapleTA, page);
                         //record progress
                         assignment.madeMapleTAAssignment = true;
                     } catch(puppeteerError){
@@ -64,10 +66,15 @@ async function main() {
                     }
                 }
             }
+            
         }
 
         //write out report
+        makeReport(courseCSV);
 
+
+        //close puppeteer
+        await browserCanvas.logout();
 
     } catch (e) {
         console.log(e);

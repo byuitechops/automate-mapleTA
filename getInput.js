@@ -6,26 +6,26 @@ async function getInput() {
                     type: 'input',
                     name: 'userName',
                     message: "Enter your username",
-                    default:"sdfsdfsdf"
+                    default: process.env.USERNAME || ""
                 },
                 {
                     type: 'password',
                     name: 'passWord',
                     message: 'Enter your password',
                     mask: '*',
-                    default:"sdfsdfsdf"
+                    default: process.env.PASSWORD || "" 
                 },
                 {
                     type: 'input',
                     name: 'courseCSV',
                     message: 'Enter the course list CSV filename',
-                    default:"courseList.csv"
+                    default:"./csvs/josh.csv"
                 },
                 {
                     type: 'input',
                     name: 'assignmentCSV',
                     message: 'Enter the assignment CSV filename',
-                    default:"ME 172 Maple TA quiz names.csv"
+                    default:"./csvs/assignmentList.csv"
                 }
 
             ])

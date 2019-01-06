@@ -9,12 +9,13 @@ module.exports = (assignmentListCSV, assignmentListCanvas) => {
         return {
             name: canvasAssignment.name,
             normalizedName: normalizeName(canvasAssignment.name),
-            url: canvasAssignment.url
+            url: canvasAssignment.html_url
 
         };
     }
 
     function makeMatches(csvAssignment) {
+        
         //normalize the csv name for comparison
         csvAssignment.normalizedNameCanvas = normalizeName(csvAssignment.nameCanvas)
         var match = {
