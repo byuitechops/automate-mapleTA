@@ -140,5 +140,5 @@ module.exports = async function setupMapleTAAssignment(url, courseName, assignme
         waitUntil: 'networkidle0'
     }, frame.click(assignmentButtonCSSSelector))]);
 
-    console.log(`created the "${assignmentName}" successfully`);
+    
 }

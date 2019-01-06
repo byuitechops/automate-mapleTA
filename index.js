@@ -10,7 +10,7 @@ function getCSV(courseCsvFile) {
     const stripBOM = require('strip-bom');
     const dsv = require('d3-dsv');
     const path = require('path');
-    const fs =  require('fs');
+    const fs = require('fs');
     //resolve the path the user puts in
     courseCsvFile = path.resolve(courseCsvFile);
     //read it in and remove the potential BOM and then parse with DSV 
@@ -20,16 +20,16 @@ function getCSV(courseCsvFile) {
 }
 
 async function main() {
+    var input, courseCSV, assignmentListCSV, page;
 
     try {
-        var input, courseCSV, assignmentListCSV, page;
         //set up
         //get user input
         input = await getInput();
         //get courseCSV
         courseCSV = getCSV(input.courseCSV);
         //get the assignmentsCSV
-        assignmentListCSV = getCSV(input.assignmentCSV).slice(0,5);
+        assignmentListCSV = getCSV(input.assignmentCSV).slice(0, 5);
 
         //log in to Canvas
         page = await browserCanvas.login(input);
@@ -39,7 +39,7 @@ async function main() {
         for (let i = 0; i < courseCSV.length; i++) {
             const course = courseCSV[i];
             console.log('====================================================');
-            console.log(`STARTING ${course.name}|${course.courseIdCanvas}|${i}|${((i+1)/courseCSV.length *100).toFixed(2)}%`);
+            console.log(`STARTING ${course.courseName}|${course.courseIdCanvas}|${i}|${((i+1)/courseCSV.length *100).toFixed(2)}%`);
             console.log('====================================================');
 
             //get canvas assignments
@@ -56,32 +56,34 @@ async function main() {
                 const assignment = assignmentMatches[j];
 
                 //if we have what we need do it
-                if(assignment.hasCanvasAssignment){
+                if (assignment.hasCanvasAssignment) {
                     //run puppeteer 
-                    try{
+                    try {
                         await setupMapleTAAssignment(assignment.canvas.url, course.courseNameMapleTA, assignment.csv.nameMapleTA, page);
                         //record progress
                         assignment.madeMapleTAAssignment = true;
-                    } catch(puppeteerError){
+                        console.log(`created the "${ assignment.csv.nameMapleTA}" successfully`);
+                    } catch (puppeteerError) {
                         //record error
                         assignment.madeMapleTAAssignment = false;
                         assignment.message = puppeteerError.message;
+                        console.log(`ERROR!!! did not connect "${assignment.csv.nameMapleTA}" for CanvasCourse "${assignment.csv.courseIdCanvas}"`);
                     }
                 }
             }
-            
-        }
 
-        //write out report
-        makeReport(courseCSV);
+        }
 
 
         //close puppeteer
         await browserCanvas.logout();
-
+        
+        
     } catch (e) {
         console.log(e);
     }
+    //write out report
+    makeReport(courseCSV);
 }
 
 main();
