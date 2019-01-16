@@ -1,54 +1,56 @@
 # automate-mapleTA
 ## This will automate the process of linking a MapleTA assignment to Canvas 
+## Description 
+This tool allows users to automate the process of linking canvas assignments to 
+their mapleTA counterparts. It uses puppeteer to automate the browser and find
+the proper assignment and link the assignment to the mapleTA version.
 
-## Rough idea of process
- 
-The lead instructor will provide CSV files for courseIDs and the assignments
-prompt for:
+## How to Install
+
+Standard Install
+
+1. Clone this repository:
+    ```bash
+    git clone https://github.com/byuitechops/mapleta-automate-setup.git
+    ```
+1. Step into the folder that was just created 
+    ```bash
+    cd ./mapleta-automate-setup
+    ```
+1. To install dependancies, run:
+    ```bash
+    npm i
+    ```
+
+1. To initialize the program, run:
+    ```bash
+    npm start
+    ```
+<!--- TODO: Add Additional Installation/Set Up Instructions, then delete this comment  --->
+
+## How to Use
+Run the following command:
+```bash
+node main.js
+```
+
+The user will need to provide two CSV files for courses and the assignments needing to be run.
+
+The user will be prompted for:
  
 1. login credentials
-2. CSV with courseID
-3. CSV with Canvas LTI Assignments
+2. CSV containing course list
+3. CSV containing Canvas LTI Assignments
  
-Login to Puppeteer
+The Course table needs to include the following:
 
-Start Course Loop
- 
-- Setup Course Homepage Link?
- 
-Start Assignment Loop
+| **Course Name** | **Course ID** |
+| ----------- | --------- |
+| ME 172      | 12345     |
 
-## Canvas api
-+ Make LTI assignment  
-    + Place in module
-+ Get AssignmentID 
-    + Whole Object
+The assignment table needs to include the following:
 
-## Puppeteer 
-- Go to Maple TA url in Canvas
-- use assignmentID and courseID
-
-Copy the Course
-
-Make course selector value map
-
-Make assignment selector value map
-
-- Check to see if we have what is needed
-- If not report the problem
-
-Select course
-
-Select Assignment
-
-Click the link button
-
-Report Success
-
-When all assignments are done
-- end assignment loop
-
-When all courses are done 
-- end course loop
-
-YAY!!!
+| **Assignment Name** |
+| --------------- |
+| 1.1 quiz 1      |
+| 1.2 quiz 2      |
