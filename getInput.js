@@ -1,5 +1,6 @@
 const inquirer = require('inquirer');
 
+// prompt the user for their login and the different CSVs needed
 async function getInput() {
         return inquirer
             .prompt([{

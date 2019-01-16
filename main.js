@@ -1,89 +1,89 @@
-const browserCanvas = require('./puppeteerLogin');
-const makeCanvasAssignment = require('./makeLTIAssignment');
-const input = require('./getInput.js');
+const getInput = require('./getInput')
 const setupMapleTAAssignment = require('./setupMapleTAAssignment');
-const assignmentLoop = require('./assignment-loop');
+const browserCanvas = require('./puppeteerLogin');
+const getAssignmentListFromCanvas = require('./getAssignmentListFromCanvas');
+const matchCanvasAssignments = require('./matchCanvasAssignments');
+const makeReport = require('./makeReport');
 
 
-const courseName = 'Joshua McKinney Sandbox - Zach Heiner';
-const assignmentName = 'Maple Graded Questions';
-
-
-// Josh
-const matchCanvasAssignments = require('./matchCanvasAssignments')
-const getAssignmentListFromCanvas = require('./getAssignmentListFromCanvas.js');
-const courseID = '38650';
-const dsv = require('d3-dsv');
-const fs = require('fs');
-
-
-async function getCSV(courseCsvFile) {
+function getCSV(courseCsvFile) {
     const stripBOM = require('strip-bom');
+    const dsv = require('d3-dsv');
+    const path = require('path');
+    const fs = require('fs');
+    //resolve the path the user puts in
+    courseCsvFile = path.resolve(courseCsvFile);
+    //read it in and remove the potential BOM and then parse with DSV 
     var csvCourseData = dsv.csvParse(stripBOM(fs.readFileSync(courseCsvFile, 'utf8')));
+
     return csvCourseData;
 }
 
+async function main() {
+    var input, courseCSV, assignmentListCSV, page;
 
-(async function () {
     try {
+        //set up
+        //get user input
+        input = await getInput();
+        //get courseCSV
+        courseCSV = getCSV(input.courseCSV);
+        //get the assignmentsCSV
+        assignmentListCSV = getCSV(input.assignmentCSV).slice(0, 5);
 
-        var assignmentData = {
-                name: "The Best Name Ever",
-                description: "This is the description."
-            },
-            ltiTool = {
-                launchURL: "https://byui-canvas.mapleta.com:443/byui-canvas/lti/",
-                toolId: "127"
-            },
-            assignment,
-            assignmentListCanvas;
+        //log in to Canvas
+        page = await browserCanvas.login(input);
 
-        //prompt the user for username and password
-        var answers = await input.getInput(),
-            credentials = {
-                userName: answers.username,
-                passWord: answers.password
-            };
 
-        //log in to canvas with puppeteer 
-        // var page = await browserCanvas.login(credentials);
+        //Course Loop
+        for (let i = 0; i < courseCSV.length; i++) {
+            const course = courseCSV[i];
+            console.log('====================================================');
+            console.log(`STARTING ${course.courseName}|${course.courseIdCanvas}|${i}|${((i+1)/courseCSV.length *100).toFixed(2)}%`);
+            console.log('====================================================');
 
-        assignmentListCanvas = await getAssignmentListFromCanvas(courseID);
-        // console.log(assignmentListCanvas[0]);
-        var assignmentListCSV = await getCSV(answers.assignmentCSV);
-        console.log(assignmentListCSV[0]);
+            //get canvas assignments
+            let assignmentListCanvas = await getAssignmentListFromCanvas(course.courseIdCanvas);
 
-        var matches = matchCanvasAssignments(assignmentListCSV,assignmentListCanvas);
+            //match up the assignmentListCanvas with assignmentListCSV
+            let assignmentMatches = matchCanvasAssignments(assignmentListCSV, assignmentListCanvas)
+
+            //save the matches to the course for the report 
+            course.assignmentMatches = assignmentMatches;
+
+            //Assignment Loop
+            for (let j = 0; j < assignmentMatches.length; j++) {
+                const assignment = assignmentMatches[j];
+
+                //if we have what we need do it
+                if (assignment.hasCanvasAssignment) {
+                    //run puppeteer 
+                    try {
+                        await setupMapleTAAssignment(assignment.canvas.url, course.courseNameMapleTA, assignment.csv.nameMapleTA, page);
+                        //record progress
+                        assignment.madeMapleTAAssignment = true;
+                        console.log(`created the "${ assignment.csv.nameMapleTA}" successfully`);
+                    } catch (puppeteerError) {
+                        //record error
+                        assignment.madeMapleTAAssignment = false;
+                        assignment.message = puppeteerError.message;
+                        console.log(`ERROR!!! did not connect "${assignment.csv.nameMapleTA}" for CanvasCourse "${assignment.csv.courseIdCanvas}"`);
+                    }
+                }
+            }
+
+        }
+
+
+        //close puppeteer
+        await browserCanvas.logout();
         
-        console.log("Matches");
-        console.log(matches.matches.slice(0,5));
-        console.log("NO Matches");
-        console.log(matches.noMatches.slice(0));
-
-
-
-
-        //await assignmentLoop(courseID, assignmentList, assignCSV);
-
-        // assignment = await makeCanvasAssignment('80', assignmentData, ltiTool, false);
-
-
-
-        //call the automation
-        //await setupMapleTAAssignment(assignment.html_url, courseName, assignmentName, page);
-
-        // make nested loop
-        // reporting
-        // course list
-        // conditionally find a canvas assignment instead of making one
-        // do we need to clone the mapleta course
-        // setup a homepage link?
-        // do we need to impersonate?
-        // Blueprint?
-        // 
-        // await browserCanvas.logout();
-    } catch (error) {
-        console.error(error);
+        
+    } catch (e) {
+        console.log(e);
     }
+    //write out report
+    makeReport(courseCSV);
+}
 
-})();
+main();

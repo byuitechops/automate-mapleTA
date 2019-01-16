@@ -12,6 +12,7 @@ async function getCSV(courseCsvFile) {
     return csvCourseData;
 }
 
+// check to make sure the name in the CSV matches the name in MapleTA
 async function main() {
 
     try {
