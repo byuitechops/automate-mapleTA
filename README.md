@@ -46,7 +46,7 @@ The Course table needs to include the following:
 
 | **courseName** | **courseNameMapleTA** | **courseIdCanvas** |
 | ----------- | --------- | --------- |
-| ME 172      | 12345     | 1 |
+| ME 172      | ME (172)  | 12345 |
 
 The assignment table needs to include the following:
 
