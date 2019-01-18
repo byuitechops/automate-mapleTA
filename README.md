@@ -44,13 +44,13 @@ The user will be prompted for:
  
 The Course table needs to include the following:
 
-| **Course Name** | **Course ID** |
-| ----------- | --------- |
-| ME 172      | 12345     |
+| **courseName** | **courseNameMapleTA** | **courseIdCanvas** |
+| ----------- | --------- | --------- |
+| ME 172      | 12345     | 1 |
 
 The assignment table needs to include the following:
 
-| **Assignment Name** |
-| --------------- |
-| 1.1 quiz 1      |
-| 1.2 quiz 2      |
+| **nameCanvas** | **nameMapleTA** |
+| --------------- | -------------- |
+| 1.1 quiz 1      | 1.1 (quiz 1) |
+| 1.2 quiz 2      | 1.2 (quiz 2) |
