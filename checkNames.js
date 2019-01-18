@@ -16,7 +16,7 @@ async function getCSV(courseCsvFile) {
 async function main() {
 
     try {
-        var csv = await getCSV('./csvs/ME 172 Maple TA quiz names.csv');
+        var csv = await getCSV('./csvs/assignmentList.csv');
 
         csv = csv.filter( row => norm( row.nameCanvas) !== norm(row.nameMapleTA))
         console.log(JSON.stringify(csv,null,4));
